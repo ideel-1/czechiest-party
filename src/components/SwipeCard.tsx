@@ -443,14 +443,24 @@ const SwipeCardInner = forwardRef<SwipeCardHandle, Props>(function SwipeCardInne
         data-overlay="pass"
         src="/images/pass.png"
         alt="pass"
+        className="no-drag"
+        draggable={false}
         style={{
           position: "absolute",
           top: 12,
           left: 12,
-          width: "100%",
+          // responsive stamp size, not full width
+          width: "clamp(84px, 34%, 160px)",
+          height: "auto",
+          // animate via CSS variable
           opacity: "var(--nope, 0)",
           transform:
-            "rotate(-12deg) scale(calc(0.9 + 0.1 * var(--nope, 0)))",
+            "translate3d(0,0,0) rotate(-12deg) scale(calc(0.88 + 0.12 * var(--nope, 0)))",
+          transformOrigin: "top left",
+          // visual polish
+          filter: "drop-shadow(0 2px 0 rgba(0,0,0,0.35))",
+          imageRendering: "auto",
+          // touch safety
           pointerEvents: "none",
           zIndex: 3,
         }}
@@ -458,14 +468,20 @@ const SwipeCardInner = forwardRef<SwipeCardHandle, Props>(function SwipeCardInne
       <img
         src="/images/drink.png"
         alt="drink"
+        draggable={false}
+        className="no-drag"
         style={{
           position: "absolute",
           top: 12,
           right: 12,
-          width: "100%",
+          width: "clamp(84px, 34%, 160px)",
+          height: "auto",
           opacity: "var(--like, 0)",
           transform:
-            "rotate(12deg) scale(calc(0.9 + 0.1 * var(--like, 0)))",
+            "translate3d(0,0,0) rotate(12deg) scale(calc(0.88 + 0.12 * var(--like, 0)))",
+          transformOrigin: "top right",
+          filter: "drop-shadow(0 2px 0 rgba(0,0,0,0.35))",
+          imageRendering: "auto",
           pointerEvents: "none",
           zIndex: 3,
         }}
