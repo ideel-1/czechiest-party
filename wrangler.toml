@@ -1,0 +1,7 @@
+name = "czechiest-party"
+compatibility_date = "2024-12-01"
+
+[[d1_databases]]
+binding = "D1_DB"                      # must match ctx.env.D1_DB in code
+database_name = "beer_db"              # must match the DB’s name in Cloudflare
+database_id = "394813ef-c9b3-4192-9b48-3e4c9468e2d5"      # paste the exact UUID of the DB with data
