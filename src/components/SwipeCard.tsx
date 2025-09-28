@@ -5,6 +5,9 @@ import React, {
   useImperativeHandle,
 } from "react";
 import type { ReactNode } from "react";
+import passImg from "../assets/overlays/Pass.png";
+import drinkImg from "../assets/overlays/Drink.png";
+
 
 /* ---------------- Types ---------------- */
 
@@ -340,7 +343,7 @@ const SwipeCardInner = forwardRef<SwipeCardHandle, Props>(function SwipeCardInne
       onDragProgress?.(p);
     }
     
-    function onTouchEnd(ev: TouchEvent) {
+    function onTouchEnd() {
       if (!sample.current.dragging) return;
       const el = refEl.current!;
       const width = window.innerWidth;
@@ -441,7 +444,7 @@ const SwipeCardInner = forwardRef<SwipeCardHandle, Props>(function SwipeCardInne
       {/* like/nope overlays */}
       <img
         data-overlay="pass"
-        src="/public/images/pass.png"
+        src={passImg}
         alt="pass"
         className="no-drag"
         draggable={false}
@@ -466,7 +469,7 @@ const SwipeCardInner = forwardRef<SwipeCardHandle, Props>(function SwipeCardInne
         }}
       />
       <img
-        src="/public/images/drink.png"
+        src={drinkImg}
         alt="drink"
         draggable={false}
         className="no-drag"
