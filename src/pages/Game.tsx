@@ -1,13 +1,105 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SwipeCard from "../components/SwipeCard";
+import SwipeCard from "../components/SwipeCard"; 
+import type { SwipeCardHandle } from "../components/SwipeCard";
 import NameDialog from "../components/NameDialog";
 import ProgressBar from "../components/ui/ProgressBar";
 import { getBeers, submitResult } from "../lib/api";
 import type { Beer } from "../lib/api";
 
+
+type Dir = "left" | "right" | "up" | "down";
+
+type Palette = {
+  outline: string;
+  fill1: string; // lighter
+  fill2: string;
+  grayer: string; // darker
+};
+
+const DEFAULT: Palette = {
+  outline: "#000",
+  fill1: "#D9D9D9",
+  fill2: "#9E9E9E",
+  grayer: "#000",
+};
+
+
+/**
+ * 9x9 pixel arrow with a vertical edge and a stair-step diagonal.
+ * Base glyph points LEFT. Rotation handles other directions.
+ */
+export function PixelMiniArrowV2({
+  size = 28,
+  direction = "left",
+  palette = DEFAULT,
+  hoverPalette,
+  onClick,    
+}: {
+  size?: number;
+  direction?: Dir;
+  palette?: Partial<Palette>;
+  hoverPalette?: Partial<Palette>;
+  onClick?: () => void;  
+}) {
+  const [hover, setHover] = useState(false);
+  const p = { ...DEFAULT, ...palette, ...(hover ? hoverPalette : {}) };
+
+  // Explicit pixel map (y rows). 0=empty, 1=outline, 2=fill light, 3=fill dark
+  // Coordinate system: x:0..8, y:0..8; base = LEFT arrow.
+  const rows: number[][] = [
+    // 0
+    [0,0,0,0,0,0,0,0,0],
+    // 1
+    [0,0,0,0,0,0,0,0,0],   // diag at x=5, fill to 6, vertical edge x=7
+    // 2
+    [0,0,0,0,0,2,0,0,0],
+    // 3
+    [0,0,0,0,2,3,0,0,0],
+    // 4 (middle with tip at x=1)
+    [0,0,0,2,3,3,3,2,0],   // tip connected (no isolated dot)
+    // 5
+    [0,0,0,0,2,3,0,0,0],
+    // 6
+    [0,0,0,0,0,2,0,0,0],
+    // 7
+    [0,0,0,0,0,0,0,0,0],
+    // 8
+    [0,0,0,0,0,0,0,0,0],
+  ];
+
+  const rot =
+    direction === "left" ? 0 : direction === "up" ? -90 : direction === "right" ? 180 : 90;
+
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 9 9"
+      shapeRendering="crispEdges"
+      style={{ display: "inline-block", imageRendering: "pixelated", cursor: "pointer"  }}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      onClick={onClick}     
+    >
+      <g transform={`rotate(${rot} 4.5 4.5)`}>
+        {rows.map((row, y) =>
+          row.map((v, x) => {
+            if (!v) return null;
+            const fill =
+            v === 4 ? p.grayer : v === 1 ? p.outline : v === 2 ? p.fill1 : p.fill2;
+            return <rect key={`${x}-${y}`} x={x} y={y} width={1} height={1} fill={fill} />;
+          })
+        )}
+      </g>
+    </svg>
+  );
+}
 export default function Game() {
   const navigate = useNavigate();
+
+  const cardRef = useRef<SwipeCardHandle>(null);
+  const [isRewinding, setIsRewinding] = useState(false);  
 
   // amount of beers in the game
   const maxBeers = 15
@@ -62,6 +154,27 @@ export default function Game() {
       cancelled = true;
     };
   }, []);
+
+  async function rewindOne() {
+    if (index <= 0 || isRewinding) return;
+    setIsRewinding(true);
+  
+    // optional: clear previously recorded choice
+    const prev = beers[index - 1];
+    if (prev) delete choicesRef.current[prev.id];
+  
+    // animate current out a bit to the RIGHT, then step back index
+    await cardRef.current?.animateOut(40, 140, "steps(2,end)");
+  
+    setIndex(i => Math.max(0, i - 1));
+    setDeckProgress(0);
+  
+    // wait for the new card to mount (key changes), then animate it in from LEFT
+    requestAnimationFrame(async () => {
+      await cardRef.current?.animateInFrom(-40, 160, "steps(2,end)");
+      setIsRewinding(false);
+    });
+  }
 
   // answer handler (0 = skip, 1 = drink)
   function answer(choice: 0 | 1) {
@@ -118,7 +231,7 @@ export default function Game() {
           clipPath: "polygon(10px 0%, calc(100% - 10px) 0%, calc(100% - 10px) 5px, calc(100% - 5px) 5px, calc(100% - 5px) 10px, 100% 10px, 100% calc(100% - 10px), calc(100% - 5px) calc(100% - 10px), calc(100% - 5px) calc(100% - 5px), calc(100% - 10px) calc(100% - 5px), calc(100% - 10px) calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 10px calc(100% - 10px), 5px calc(100% - 10px), 5px calc(100% - 5px), 10px calc(100% - 5px), 10px calc(100% - 10px), 0% calc(100% - 10px), 0% 10px, 5px 10px, 5px 5px, 10px 5px, 10px 10px)",
         }}
       >
-        <img src={b.image_path} alt={b.label} style={{ display: "block", width: "100%", borderRadius: 8, clipPath: "polygon(8px 0%, calc(100% - 8px) 0%, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 8px), 4px calc(100% - 8px), 4px calc(100% - 4px), 8px calc(100% - 4px), 8px calc(100% - 8px), 0% calc(100% - 8px), 0% 8px, 4px 8px, 4px 4px, 8px 4px, 8px 8px)" }} />
+        <img draggable={false} src={b.image_path} alt={b.label} style={{ WebkitUserDrag: "none" as any, WebkitTouchCallout: "none" as any, WebkitTapHighlightColor: "transparent" as any, userSelect: "none", display: "block", width: "100%", borderRadius: 8, clipPath: "polygon(8px 0%, calc(100% - 8px) 0%, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 8px), 4px calc(100% - 8px), 4px calc(100% - 4px), 8px calc(100% - 4px), 8px calc(100% - 8px), 0% calc(100% - 8px), 0% 8px, 4px 8px, 4px 4px, 8px 4px, 8px 8px)" }} />
         <h2 style={{ marginTop: 20, fontSize: 20, fontWeight: 800 }}>{b.label}</h2>
         {b.description ? <p style={{ marginTop: 6, fontSize: 16, lineHeight: 1.5 }}>{b.description}</p> : null}
       </div>
@@ -140,7 +253,12 @@ export default function Game() {
           clipPath: "polygon(10px 0%, calc(100% - 10px) 0%, calc(100% - 10px) 5px, calc(100% - 5px) 5px, calc(100% - 5px) 10px, 100% 10px, 100% calc(100% - 10px), calc(100% - 5px) calc(100% - 10px), calc(100% - 5px) calc(100% - 5px), calc(100% - 10px) calc(100% - 5px), calc(100% - 10px) calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 10px calc(100% - 10px), 5px calc(100% - 10px), 5px calc(100% - 5px), 10px calc(100% - 5px), 10px calc(100% - 10px), 0% calc(100% - 10px), 0% 10px, 5px 10px, 5px 5px, 10px 5px, 10px 10px)",
         }}
       >
-        <img src={b.image_path} alt={b.label} style={{ display: "block", width: "100%", borderRadius: 8, clipPath: "polygon(8px 0%, calc(100% - 8px) 0%, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 8px), 4px calc(100% - 8px), 4px calc(100% - 4px), 8px calc(100% - 4px), 8px calc(100% - 8px), 0% calc(100% - 8px), 0% 8px, 4px 8px, 4px 4px, 8px 4px, 8px 8px)" }} />
+        <img 
+            draggable={false}  
+            src={b.image_path} 
+            alt={b.label} 
+            style={{ display: "block", width: "100%", borderRadius: 8, clipPath: "polygon(8px 0%, calc(100% - 8px) 0%, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 8px), 4px calc(100% - 8px), 4px calc(100% - 4px), 8px calc(100% - 4px), 8px calc(100% - 8px), 0% calc(100% - 8px), 0% 8px, 4px 8px, 4px 4px, 8px 4px, 8px 8px)" }} 
+        />
         <h2 style={{ marginTop: 20, fontSize: 20, fontWeight: 800 }}>{b.label}</h2>
         {b.description ? <p style={{ marginTop: 6, fontSize: 16, lineHeight: 1.5 }}>{b.description}</p> : null}
 
@@ -211,6 +329,7 @@ export default function Game() {
         {/* active card on top */}
         <div style={{ position: "relative", zIndex: 1 }}>
         <SwipeCard
+          ref={cardRef}    
           key={current.id}               // <-- forces a fresh mount per card
           onSwipe={handleSwipe}
           onDragProgress={setDeckProgress}
@@ -219,10 +338,13 @@ export default function Game() {
           >
           {renderActive(current)}
         </SwipeCard>
-
         </div>
-
-        
+        <div style={{ marginTop: 30, zIndex: 1 }}>
+        <PixelMiniArrowV2 
+          size={48}
+          hoverPalette={{ fill1: "#8a8a8a", fill2: "#474747" }}
+          onClick={!isRewinding ? rewindOne : undefined} />
+        </div>
       </div>
 
       {/* Name dialog after last swipe */}

@@ -1,10 +1,107 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-// import inviteImageUrl from "../../images/invite.png"; //
+
+export function PixelStairButton({
+  to = "/game",
+  children = "PLAY",
+  step = 6,            // stair size in px
+  border = 3,          // border (outline) thickness in px
+}: {
+  to?: string;
+  children?: React.ReactNode;
+  step?: number;
+  border?: number;
+}) {
+  const [hover, setHover] = useState(false);
+  const [active, setActive] = useState(false);
+
+  const clip = useMemo(() => {
+    const s = `${step}px`;
+    return `polygon(
+      0 ${s}, ${s} ${s}, ${s} 0, calc(100% - ${s}) 0,
+      calc(100% - ${s}) ${s}, 100% ${s}, 100% calc(100% - ${s}),
+      calc(100% - ${s}) calc(100% - ${s}), calc(100% - ${s}) 100%,
+      ${s} 100%, ${s} calc(100% - ${s}), 0 calc(100% - ${s})
+    )`;
+  }, [step]);
+
+  // palette similar to your reference
+  const colors = {
+    outer: "#0f1c3a",      // dark outer outline
+    inner: "#2b2d6c",      // inner outline
+    faceTop: "#fff",    // face
+    faceBot: "#fff",
+  };
+
+  return (
+    <Link
+      to={to}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => { setHover(false); setActive(false); }}
+      onMouseDown={() => setActive(true)}
+      onMouseUp={() => setActive(false)}
+      style={{
+        position: "relative",
+        display: "inline-block",
+        textDecoration: "none",
+        userSelect: "none",
+        transform: active ? "translateY(3px)" : hover ? "translateY(-1px)" : "none",
+        transition: "transform 90ms steps(2,end)",
+      }}
+    >
+      {/* OUTER BORDER (dark) */}
+      <span
+        aria-hidden
+        style={{
+          display: "block",
+          padding: border,                 // thickness of outer outline
+          background: colors.outer,
+          clipPath: clip,
+        }}
+      >
+        {/* INNER BORDER (mid) */}
+        <span
+          aria-hidden
+          style={{
+            display: "block",
+            padding: border,               // thickness of inner outline
+            background: colors.inner,
+            clipPath: clip,
+          }}
+        >
+          {/* FACE */}
+          <span
+            style={{
+              display: "inline-block",
+              minWidth: 240,
+              padding: "16px 36px",
+              color: "#0f1c3a",
+              fontFamily: "'Pixelify Sans', system-ui, sans-serif",
+              fontWeight: 800,
+              letterSpacing: 1,
+              fontSize: "1.5em",
+              textTransform: "uppercase",
+              textAlign: "center",
+              background: `linear-gradient(${active ? 180 : 180}deg, ${colors.faceTop}, ${colors.faceBot})`,
+              clipPath: clip,
+              position: "relative",
+              // subtle inner bevel
+              boxShadow: active
+                ? "inset 0 2px 0 rgba(255,255,255,0.35), inset 0 -2px 0 rgba(0,0,0,0.25)"
+                : "inset 0 3px 0 rgba(255,255,255,0.45), inset 0 -4px 0 rgba(0,0,0,0.25)",
+            }}
+          >
+ 
+
+            {children}
+          </span>
+        </span>
+      </span>
+    </Link>
+  );
+}
 
 export default function Landing() {
-  const [isHover, setIsHover] = useState(false);
-  const [isActive, setIsActive] = useState(false);
   return (
     <div
       style={{
@@ -26,7 +123,8 @@ export default function Landing() {
           zIndex: 0,
         }}
       />
-      {/* Pixel overlay */}
+
+      {/* Pixel grid overlay (fixed typo 0gitpx -> 0px) */}
       <div
         style={{
           position: "absolute",
@@ -34,24 +132,34 @@ export default function Landing() {
           background: `
             repeating-linear-gradient(
               0deg,
-              transparent 0gitpx,
+              transparent 0px,
               transparent 29px,
-              rgba(0,0,0,0.1) 29px,
-              rgba(0,0,0,0.1) 30px
+              rgba(0,0,0,0.08) 29px,
+              rgba(0,0,0,0.08) 30px
             ),
             repeating-linear-gradient(
               90deg,
               transparent 0px,
               transparent 29px,
-              rgba(0,0,0,0.1) 29px,
-              rgba(0,0,0,0.1) 30px
+              rgba(0,0,0,0.08) 29px,
+              rgba(0,0,0,0.08) 30px
             )
           `,
           zIndex: 0,
+          pointerEvents: "none",
         }}
       />
-      {/* Background image layer at 50% opacity */}
-      
+
+      {/* Background image layer */}
+      <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center" }}>
+        <img
+          src="/images/czech_flag.png"
+          alt="Czech flag"
+          style={{ opacity: 0.5, maxWidth: "100%", height: "auto", userSelect: "none" }}
+        />
+      </div>
+
+      {/* Foreground content */}
       <div style={{ textAlign: "center", maxWidth: 720, padding: 24, position: "relative", zIndex: 1 }}>
         <h1
           style={{
@@ -62,45 +170,15 @@ export default function Landing() {
             fontFamily: "'Pixelify Sans', system-ui, sans-serif",
             fontWeight: 700,
             color: "#000",
+            textShadow: "0 1px 0 rgba(255,255,255,0.35)",
           }}
         >
           Do you like the same stuff as we do?
         </h1>
-        <Link
-          to="/game"
-          onMouseEnter={() => setIsHover(true)}
-          onMouseLeave={() => {
-            setIsHover(false);
-            setIsActive(false);
-          }}
-          onMouseDown={() => setIsActive(true)}
-          onMouseUp={() => setIsActive(false)}
-          style={{
-            display: "inline-block",
-            marginTop: 28,
-            padding: "18px 40px",
-            minWidth: 260,
-            borderRadius: 14,
-            textDecoration: "none",
-            fontFamily: "'Pixelify Sans', system-ui, sans-serif",
-            fontOpticalSizing: "auto",
-            color: "#fff",
-            fontWeight: 700,
-            fontSize: "1.25rem",
-            letterSpacing: 1,
-            textTransform: "uppercase",
-            background: `linear-gradient(#686e76, #555b63 55%, #4a5058)`,
-            border: "2px solid #2a2f35",
-            boxShadow: `${isActive ? "inset 0 3px 0 #777d86, inset 0 -2px 0 #2a2f35, 0 2px 0 #1f2328, 0 8px 18px rgba(0,0,0,0.35)" : "inset 0 4px 0 #7f858e, inset 0 -6px 0 #2a2f35, 0 8px 0 #1f2328, 0 14px 24px rgba(0,0,0,0.38)"}`,
-            transform: isActive ? "translateY(6px)" : isHover ? "translateY(-4px)" : "none",
-            transition: "transform 0.12s ease, box-shadow 0.12s ease",
-            textShadow:
-              "0 2px 0 #2a2f35, -1px 0 0 #2a2f35, 1px 0 0 #2a2f35, 0 -1px 0 #2a2f35, 0 0 6px rgba(0,0,0,0.25)",
-            filter: isHover ? "brightness(1.02)" : undefined,
-          }}
-        >
-          PLAY
-        </Link>
+
+        <div style={{ marginTop: 28 }}>
+          <PixelStairButton to="/game">PLAY</PixelStairButton>
+        </div>
       </div>
     </div>
   );
