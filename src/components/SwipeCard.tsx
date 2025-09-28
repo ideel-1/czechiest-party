@@ -441,16 +441,16 @@ const SwipeCardInner = forwardRef<SwipeCardHandle, Props>(function SwipeCardInne
       {/* like/nope overlays */}
       <img
         data-overlay="pass"
-        src="/images/pass.png"
+        src="/public/images/pass.png"
         alt="pass"
         className="no-drag"
         draggable={false}
         style={{
           position: "absolute",
-          top: 12,
-          left: 12,
+          top: 60,
+          right: 80,
           // responsive stamp size, not full width
-          width: "clamp(84px, 34%, 160px)",
+          width: "300px",
           height: "auto",
           // animate via CSS variable
           opacity: "var(--nope, 0)",
@@ -466,15 +466,15 @@ const SwipeCardInner = forwardRef<SwipeCardHandle, Props>(function SwipeCardInne
         }}
       />
       <img
-        src="/images/drink.png"
+        src="/public/images/drink.png"
         alt="drink"
         draggable={false}
         className="no-drag"
         style={{
           position: "absolute",
-          top: 12,
-          right: 12,
-          width: "clamp(84px, 34%, 160px)",
+          top: 80,
+          left: 80,
+          width: "300px",
           height: "auto",
           opacity: "var(--like, 0)",
           transform:
