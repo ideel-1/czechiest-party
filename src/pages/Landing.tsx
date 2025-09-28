@@ -34,7 +34,7 @@ export default function Landing() {
           background: `
             repeating-linear-gradient(
               0deg,
-              transparent 0px,
+              transparent 0gitpx,
               transparent 29px,
               rgba(0,0,0,0.1) 29px,
               rgba(0,0,0,0.1) 30px
