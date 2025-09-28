@@ -79,8 +79,8 @@ export default function Leaderboard() {
         <div
           aria-label={`${avatarLabel} avatar placeholder`}
           style={{
-            width: 72,
-            height: 72,
+            width: "clamp(48px, 10vw, 72px)",
+            height: "clamp(48px, 10vw, 72px)",
             borderRadius: "50%",
             background: "#e5e7eb",
             border: "2px solid #d1d5db",
@@ -118,8 +118,8 @@ export default function Leaderboard() {
                   display: "grid",
                   gridTemplateColumns: "auto 1fr auto",
                   alignItems: "center",
-                  gap: 8,
-                  padding: "10px 14px",
+                  gap: "clamp(6px, 2vw, 12px)",
+                  padding: "clamp(8px, 2.4vw, 12px) clamp(10px, 3vw, 14px)",
                   borderBottom: i === rows.slice(0, 10).length - 1 ? "none" : "1px solid #eee",
                   background: place <= 3 ? "#fffbeb" : "#fff"
                 }}
@@ -128,7 +128,7 @@ export default function Leaderboard() {
                   {trophy && <span title={`Rank ${place}`}>{trophy}</span>}
                   <span>{place}.</span>
                 </span>
-                <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: "black" }}>{r.name}</span>
+                <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: windowWidth < 420 ? "normal" : "nowrap", wordBreak: windowWidth < 420 ? "break-word" : "normal", color: "black" }}>{r.name}</span>
                 <span style={{ fontWeight: 500, color: "black" }}>{fmtPercent(r.score)}</span>
               </li>
             );
@@ -155,7 +155,7 @@ export default function Leaderboard() {
             src="/images/invite.png"
             alt="Invite poster"
             style={{ 
-              width: "100%", 
+              width: "min(100%, 720px)", 
               height: "auto", 
               borderRadius: 0, 
               boxShadow: "0 10px 20px rgba(0,0,0,0.15)",
@@ -168,7 +168,7 @@ export default function Leaderboard() {
         <div style={{ width: "100%" }}>
           {u && (r > 0 || m > 0) && (
             <div style={{ 
-              width: "500px",
+              width: "min(92vw, 500px)",
               marginLeft: "auto",
               marginTop: "5vh",
               marginRight: "auto",
@@ -196,9 +196,12 @@ export default function Leaderboard() {
           {!loading && !err && (
             <div
               style={{
+                width: "100%",
                 display: "grid",
                 gridTemplateColumns: windowWidth < 900 ? "1fr" : "1fr 1fr",
                 gap: 24,
+                alignItems: "start",   
+                minWidth: 0,    
               }}
             >
               <LeaderboardSection title={"Most similar to Ruda's"} rows={rudaRows} avatarLabel="R" />
