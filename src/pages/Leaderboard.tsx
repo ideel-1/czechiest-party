@@ -19,6 +19,7 @@ function useWindowWidth() {
 type Row = { name: string; score: number; created_at: string };
 type Suggestion = { name: string; song: string; created_at: string };
 
+
 const fmtPercent = (v: unknown) => {
   const n = Number(v);
   return Number.isFinite(n) ? `${n}%` : "0%";
@@ -152,7 +153,7 @@ function AddToCalendarButton() {
       onMouseDown={() => setActive(true)}
       onMouseUp={() => setActive(false)}
       style={{
-        width: "50%",
+        width: "min(94vw, 720px)",
         position: "relative",
         textDecoration: "none",
         userSelect: "none",
@@ -216,7 +217,7 @@ function MusicBox() {
   return (
     <div
       style={{
-        width: "50%",
+        width: "min(94vw, 720px)",
         border: "1px solid #eee",
         borderRadius: 12,
         padding: 16,
@@ -232,12 +233,20 @@ function MusicBox() {
         Add your music suggestion for the party: <span style={{ fontWeight: 600 }}>(artist + song name)</span>
       </h3>
 
-      <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+      <div style={{ gap: 8, marginTop: 10, display: "grid", alignItems: "center",
+        gridTemplateColumns: useWindowWidth() < 900 ? "1fr" : "4fr 1fr", }}>
         <input
           value={song}
           onChange={(e) => setSong(e.target.value)}
           placeholder="e.g. Black Eyed Peas - Pump it"
-          style={{ flex: 1, paddingLeft: 8, padding: "14x 20px", border: "1px solid #ddd", fontFamily: "'Pixelify Sans', system-ui, sans-serif", fontSize: 16, borderRadius: 10, clipPath:
+          style={{
+            whiteSpace: "nowrap",
+            padding: "14px 20px",
+            border: "1px solid #ddd", 
+            fontFamily: "'Pixelify Sans', system-ui, sans-serif", 
+            fontSize: 16, 
+            borderRadius: 10, 
+            clipPath:
             "polygon(8px 0%, calc(100% - 8px) 0%, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 8px), 4px calc(100% - 8px), 4px calc(100% - 4px), 8px calc(100% - 4px), 8px calc(100% - 8px), 0% calc(100% - 8px), 0% 8px, 4px 8px, 4px 4px, 8px 4px, 8px 8px)",}}
           disabled={disabled}
         />
@@ -437,7 +446,8 @@ export default function Leaderboard() {
   }, []);
 
   return (
-    <div style={{ display: "grid", placeItems: "center", padding: 24 }}>
+    <div style={{ display: "grid", placeItems: "center"
+    }}>
       <div
         style={{
           width: "100%",
@@ -453,7 +463,7 @@ export default function Leaderboard() {
             src="/images/invite.png"
             alt="Invite poster"
             style={{
-              width: "50%",
+              width: "min(94vw, 720px)",
               height: "auto",
               borderRadius: 0,
               boxShadow: "0 10px 20px rgba(0,0,0,0.15)",
@@ -470,7 +480,7 @@ export default function Leaderboard() {
           {u && (r > 0 || m > 0) && (
             <div
               style={{
-                width: "min(50%, 720px)",
+                width: "min(94vw, 720px)",
                 marginLeft: "auto",
                 marginTop: "5vh",
                 marginRight: "auto",
@@ -486,6 +496,7 @@ export default function Leaderboard() {
             >
               <h3
                 style={{
+                  width: "min(50%, 720px)",
                   margin: "0 0 8px 0",
                   fontSize: "3rem",
                   color: "black",
@@ -516,10 +527,10 @@ export default function Leaderboard() {
           {!loading && !err && (
             <div
               style={{
-                width: "50%",
+                width: "min(92vw, 720px)",
                 display: "grid",
+                alignContent: "center",
                 gridTemplateColumns: windowWidth < 900 ? "1fr" : "1fr 1fr",
-                gap: 24,
                 alignItems: "start",
                 minWidth: 0,
               }}
