@@ -29,8 +29,8 @@ export function PixelStairButton({
   const colors = {
     outer: "#0f1c3a",      // dark outer outline
     inner: "#2b2d6c",      // inner outline
-    faceTop: "#fff",    // face
-    faceBot: "#fff",
+    base: "#fff",    // face
+    hovered: "#e5e9f0",
   };
 
   return (
@@ -82,7 +82,8 @@ export function PixelStairButton({
               fontSize: "1.5em",
               textTransform: "uppercase",
               textAlign: "center",
-              background: `linear-gradient(${active ? 180 : 180}deg, ${colors.faceTop}, ${colors.faceBot})`,
+              background: hover ? colors.hovered : colors.base,
+              //background: `linear-gradient(${active ? 180 : 180}deg, ${colors.faceTop}, ${colors.faceBot})`,
               clipPath: clip,
               position: "relative",
               // subtle inner bevel
