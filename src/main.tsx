@@ -8,6 +8,7 @@ import Results from "./pages/Results";
 import Leaderboard from "./pages/Leaderboard";
 import NameSubmissionWrapper from "./pages/NameSubmissionWrapper";
 import "./index.css";
+const Board = React.lazy(() => import("./features/board"));
 
 const router = createBrowserRouter([
   {
@@ -17,7 +18,8 @@ const router = createBrowserRouter([
       { path: "/game", element: <Game /> },
       { path: "/name-submission", element: <NameSubmissionWrapper /> },
       { path: "/results", element: <Results /> },
-      { path: "/leaderboard", element: <Leaderboard /> }
+      { path: "/leaderboard", element: <Leaderboard /> },
+      { path: "/board", element: <React.Suspense fallback={null}><Board/></React.Suspense> }
     ],
   },
 ]);

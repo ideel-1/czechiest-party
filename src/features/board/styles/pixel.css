@@ -1,0 +1,57 @@
+:root {
+  --px-border: 2px;
+  --px-radius: 6px;
+  --px-shadow: 0 0 0 2px #000, 4px 4px 0 0 #000;
+  --px-grid: 16px;
+  --px-yellow: #ffe066;
+  --px-yellow-dark: #e4c24f;
+  --px-paper: #fffdf5;
+  --px-ink: #1c1c1c;
+  --px-blue: #b3e5ff;
+  --px-photo-border: #eaeaea;
+  --px-bg: #f5f5f5;
+}
+
+.px-card {
+  background: var(--px-paper);
+  border: var(--px-border) solid var(--px-ink);
+  border-radius: var(--px-radius);
+  box-shadow: var(--px-shadow);
+}
+
+.px-postit {
+  background: var(--px-yellow);
+  border: var(--px-border) solid #000;
+  border-radius: 0;
+  outline: var(--px-border) solid var(--px-yellow-dark);
+}
+
+.px-photo {
+  background: #fff;
+  border: var(--px-border) solid var(--px-photo-border);
+  box-shadow: 4px 4px 0 #000;
+}
+
+.px-button {
+  background: var(--px-blue);
+  border: var(--px-border) solid #000;
+  border-radius: 0;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.px-button:active { transform: translate(1px,1px); }
+
+.px-handle {
+  width: 10px; height: 10px;
+  background: #000;
+}
+
+.px-bg {
+  background-image:
+    linear-gradient(#eee 1px, transparent 1px),
+    linear-gradient(90deg, #eee 1px, transparent 1px);
+  background-size: var(--px-grid) var(--px-grid);
+  background-color: var(--px-bg);
+}
+
+

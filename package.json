@@ -15,7 +15,9 @@
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-progress": "^1.1.7",
+    "@supabase/supabase-js": "^2.47.10",
     "framer-motion": "^12.23.19",
+    "lodash.throttle": "^4.1.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.9.1"
@@ -23,6 +25,7 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250919.0",
     "@eslint/js": "^9.35.0",
+    "@types/lodash.throttle": "^4.1.9",
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.2",
