@@ -15,7 +15,7 @@ export default function NameDialog({ open, onOpenChange, onSubmit, loading, erro
 
   const overlay: CSSProperties = { position:"fixed", inset:0, background:"rgba(0,0,0,0.8)", zIndex: "4" };
   const content: CSSProperties = { position:"fixed", left:"50%", top:"50%", transform:"translate(-50%,-50%)",
-    width:"min(92vw,500px)", background:"#fff", borderRadius:0, padding:40, boxShadow:"0 20px 60px rgba(0,0,0,0.25)", zIndex: "5", 
+    width:"min(92vw,500px)", background: "#FAF9F6", borderRadius:0, padding:40, boxShadow:"0 20px 60px rgba(0,0,0,0.25)", zIndex: "5", 
     clipPath: "polygon(12px 0%, calc(100% - 12px) 0%, calc(100% - 12px) 6px, calc(100% - 6px) 6px, calc(100% - 6px) 12px, 100% 12px, 100% calc(100% - 12px), calc(100% - 6px) calc(100% - 12px), calc(100% - 6px) calc(100% - 6px), calc(100% - 12px) calc(100% - 6px), calc(100% - 12px) calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 12px calc(100% - 12px), 6px calc(100% - 12px), 6px calc(100% - 6px), 12px calc(100% - 6px), 12px calc(100% - 12px), 0% calc(100% - 12px), 0% 12px, 6px 12px, 6px 6px, 12px 6px, 12px 12px)" };
 
   return (
@@ -23,18 +23,18 @@ export default function NameDialog({ open, onOpenChange, onSubmit, loading, erro
       <Dialog.Portal>
         <Dialog.Overlay style={overlay} />
         <Dialog.Content style={content}>
-          <Dialog.Title style={{ fontWeight:800, fontSize:20, marginBottom:24, color: "black", fontFamily: "'Pixelify Sans', system-ui, sans-serif" }}>Enter your name below:</Dialog.Title>
+          <Dialog.Title style={{ fontWeight:800, fontSize:30, lineHeight: 1, marginBottom:24, color: "black", fontFamily: "'Jersey 10', system-ui, sans-serif" }}>Enter your name below:</Dialog.Title>
 
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Your name"
             style={{ 
-              fontFamily: "'Pixelify Sans', system-ui, sans-serif", 
-              width:"95%", 
+              fontFamily: "'Jersey 10', system-ui, sans-serif", 
+              width:"100%", 
               padding:"10px 12px", 
               borderRadius:0, 
-              fontSize:16,
+              fontSize:20,
               border: "1px solid #ddd",
               clipPath: "polygon(6px 0%, calc(100% - 6px) 0%, calc(100% - 6px) 6px, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 6px), 0% calc(100% - 6px), 0% 6px, 6px 6px)"
             }}
@@ -50,9 +50,10 @@ export default function NameDialog({ open, onOpenChange, onSubmit, loading, erro
                 padding:"10px 14px", 
                 borderRadius:0, 
                 background:"black", 
-                color:"#fff", 
+                color:"#fff",
+                fontSize: "20px", 
                 border:"1px solid transparent", 
-                fontFamily: "'Pixelify Sans', system-ui, sans-serif",
+                fontFamily: "'Jersey 10', system-ui, sans-serif",
                 clipPath: "polygon(6px 0%, calc(100% - 6px) 0%, calc(100% - 6px) 6px, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 6px), 0% calc(100% - 6px), 0% 6px, 6px 6px)"
               }}
             >

@@ -104,7 +104,7 @@ export function PixelStairButton({
 
 export default function Landing() {
   return (
-    <div
+    <div className="game-landing-lock"
       style={{
         width: "100vw",
         minHeight: "100vh",

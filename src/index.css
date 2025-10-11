@@ -25,7 +25,28 @@ html, body {
   height: 100%;
   margin: 0;
   overflow-x: hidden; /* prevents accidental 1px horizontal scroll */
-  background: transparent; /* no image here */
+  background: transparent;
+  overflow: auto;                 /* prevent page scroll */
+  overscroll-behavior: auto;   /* no image here */
+}
+
+.page {
+  min-height: 100dvh;          /* modern dynamic viewport */
+  min-height: 100svh;          /* fallback on some browsers */
+  box-sizing: border-box;
+}
+
+/* Game-only lock (prevents page scroll; keeps horizontal pan for swipes) */
+.game-landing-lock {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;            /* lock page scroll just for Game */
+  display: grid;
+  place-items: center;
+  padding: clamp(12px, 4vw, 24px);
+  touch-action: pan-x;         /* allow horizontal drags, block vertical */
+  overscroll-behavior: none;   /* stop bounce / pull-to-refresh inside */
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {

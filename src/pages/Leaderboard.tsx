@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate} from "react-router-dom";
 import { getLeaderboard } from "../lib/api";
+import CelebrationOverlay from "../components/CelebrationOverlay";
+
 
 /* ---------------- responsive hook ---------------- */
 
@@ -20,9 +22,9 @@ type Row = { name: string; score: number; created_at: string };
 type Suggestion = { name: string; song: string; created_at: string };
 
 
-const fmtPercent = (v: unknown) => {
+const fmtCount = (v: unknown) => {
   const n = Number(v);
-  return Number.isFinite(n) ? `${n}%` : "0%";
+  return Number.isFinite(n) ? n.toString() : "0";
 };
 
 function useQuery() {
@@ -128,10 +130,10 @@ async function submitSongSuggestion(song: string) {
 function AddToCalendarButton() {
   // TODO: replace with your real event info
   const title = "Czechiest Party";
-  const start = new Date("2025-10-31T20:00:00+03:00"); // Europe/Helsinki example
-  const end = new Date("2025-10-31T23:00:00+03:00");
-  const details = "Bring your friends. Dress code: Czech chic.";
-  const location = "Prague, CZ";
+  const start = new Date("2025-11-08T21:00:00+03:00"); // Europe/Helsinki example
+  const end = new Date("2025-11-09T04:00:00+03:00");
+  const details = "Czechiest Part 4 - we have a few drinks, but also bring your own:)";
+  const location = "Otakaari 20, 02150 Espoo, Finland";
   const [hover, setHover] = useState(false);
   const [active, setActive] = useState(false);
 
@@ -179,7 +181,7 @@ function MusicBox() {
   const [song, setSong] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
-  const [recent, setRecent] = useState<Suggestion[]>([]);
+  const [_recent, setRecent] = useState<Suggestion[]>([]);
   const [disabled, setDisabled] = useState(false);
 
   async function refresh() {
@@ -404,7 +406,7 @@ const LeaderboardSection = ({
                 >
                   {r.name}
                 </span>
-                <span style={{ fontWeight: 500, color: "black" }}>{fmtPercent(r.score)}</span>
+                <span style={{ fontWeight: 500, color: "black" }}>{fmtCount(r.score)}/15</span>
               </li>
             );
           })}
@@ -423,13 +425,33 @@ export default function Leaderboard() {
   const [loading, setLoading] = useState(true);
   const windowWidth = useWindowWidth();
   const { r, m, u } = useQuery();
+  const navigate = useNavigate();
+  const location = useLocation();                           // keep full Location type
+  const search = new URLSearchParams(location.search);
+  const forceDemo =
+  search.get("demo") === "1" || localStorage.getItem("celebrateDemo") === "1";
+
+const celebrateFromState = (location.state as any)?.celebrate === true;
+
+const shouldCelebrateInitial =
+  celebrateFromState || search.get("c") === "1" || forceDemo;
+
+const [celebrate, setCelebrate] = useState<boolean>(shouldCelebrateInitial);      // OK
+
+
+   // A) one effect to scrub ?c and router state when celebrating
+   useEffect(() => {
+   if (!shouldCelebrateInitial) return;
+     const clean = new URL(window.location.href);
+     clean.searchParams.delete("demo");
+     navigate(clean.pathname + clean.search + clean.hash, { replace: true });
+   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setErr(null);
     setLoading(true);
     setRudaRows([]);
     setMarekRows([]);
-
     (async () => {
       try {
         const [rudaData, marekData] = await Promise.all([getLeaderboard("ruda", 10), getLeaderboard("marek", 10)]);
@@ -444,9 +466,8 @@ export default function Leaderboard() {
       }
     })();
   }, []);
-
-  const N = 12;          // notch size (outer)
-  const half = N / 2;    // small notch steps
+  const isWide = windowWidth >= 680;
+  const N = 12;          // notch size (outer)    // small notch steps
   const BORDER = 10;     // thickness of the white border
 
   const pixelClip = (n: number, h :number = n / 2) =>
@@ -463,8 +484,15 @@ export default function Leaderboard() {
     )`;
 
   return (
-    <div style={{ display: "grid", placeItems: "center"
-    }}>
+    <>
+    <div
+    style={{
+      display: "grid",
+      placeItems: "center",
+      opacity: celebrate ? 0 : 1,             // fade in after overlay
+      transition: "opacity 280ms ease",       // match CelebrationOverlay fadeMs
+    }}
+  >
       <div
         style={{
           width: "100%",
@@ -476,15 +504,16 @@ export default function Leaderboard() {
       >
         {/* Leaderboard column */}
         <div style={{ width: "100%", display: "grid", placeItems: "center", marginTop: "5vh" }}>
+        <h2 style={{ fontFamily: "'Pixelify Sans', system-ui, sans-serif", fontSize: "3em" }}>Leaderboard</h2>
           {u && (r > 0 || m > 0) && (
+                        
             <div
               style={{
                 width: "min(94vw, 720px)",
                 marginLeft: "auto",
-                marginTop: "5vh",
                 marginRight: "auto",
                 textAlign: "center",
-                marginBottom: "10vh",
+                marginBottom: "5vh",
                 padding: "16px 20px",
                 background: "#feee8c",
                 border: "1px solid #e5e7eb",
@@ -495,27 +524,35 @@ export default function Leaderboard() {
             >
               <h3
                 style={{
-                  width: "min(50%, 720px)",
+                  width: "100%",
                   margin: "0 0 8px 0",
                   fontSize: "3rem",
                   color: "black",
                   fontWeight: 700,
                   fontFamily: "'Pixelify Sans', system-ui, sans-serif",
+                  textAlign: "center"
                 }}
               >
-                Your Score
+                🏆 Your Score
               </h3>
-              <div style={{ fontSize: "2rem", color: "#374151", display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-                <div style={{ textAlign: "center" }}>{m}% &nbsp; Marek</div>
-                <div style={{ textAlign: "center" }}>{r}% &nbsp;Ruda</div>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr minmax(clamp(8px, 2vw, 20px), 40px) 1fr",
+                  alignItems: "center",
+                  justifyItems: "center",
+                  textAlign: "center",
+                  fontSize: "2rem",
+                  color: "#374151",
+                  width: "100%",
+                }}
+              >
+                <div>{r}/15 &nbsp;same likes with Ruda</div>
+                <div /> {/* spacer track */}
+                <div>{m}/15 &nbsp;same likes with Marek</div>
               </div>
             </div>
           )}
-
-          {/* Header + calendar */}
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-            <h2 style={{ fontFamily: "'Pixelify Sans', system-ui, sans-serif", fontSize: "3em" }}>Leaderboard</h2>
-          </div>
 
           {/* Music suggestions (single input) */}
 
@@ -526,16 +563,31 @@ export default function Leaderboard() {
           {!loading && !err && (
             <div
               style={{
-                width: "min(92vw, 720px)",
+                width: "min(92vw, 720px)",           // give a bit more room on desktop
+                marginInline: "auto",
                 display: "grid",
                 alignContent: "center",
-                gridTemplateColumns: windowWidth < 900 ? "1fr" : "1fr 1fr",
+                // two tracks on wide, one track on narrow:
+                gridTemplateColumns: isWide ? "1fr 1fr" : "1fr",
+                // explicit gaps:
+                columnGap: isWide ? "clamp(12px, 2.5vw, 28px)" : 0,
+                rowGap: isWide ? 0 : "clamp(10px, 2.2vw, 18px)",
                 alignItems: "start",
                 minWidth: 0,
               }}
             >
-              <LeaderboardSection title={"Most similar to Ruda's"} rows={rudaRows} avatarSrc="/images/profilepic_ruda.png" windowWidth={windowWidth} />
-              <LeaderboardSection title={"Most similar to Marek's"} rows={marekRows} avatarSrc="/images/profilepic_marek.png" windowWidth={windowWidth} />
+              <LeaderboardSection
+                title={"Most similar to Ruda's"}
+                rows={rudaRows}
+                avatarSrc="/images/profilepic_ruda.png"
+                windowWidth={windowWidth}
+              />
+              <LeaderboardSection
+                title={"Most similar to Marek's"}
+                rows={marekRows}
+                avatarSrc="/images/profilepic_marek.png"
+                windowWidth={windowWidth}
+              />
             </div>
           )}
         </div>
@@ -578,7 +630,19 @@ export default function Leaderboard() {
           </div>
         </div>
       
-      </div>
     </div>
+    </div>
+      {celebrate && (
+      <CelebrationOverlay
+        videoSrc="/videos/covervideo.mp4"       // put this file in public/videos/
+        minDurationMs={4600}                   // tweak as you like
+        fadeMs={600}
+        onDone={() => {
+          localStorage.removeItem("celebrateDemo"); // clear demo mode after showing
+          setCelebrate(false);
+        }}     // when finished, reveal content
+      />
+      )}
+      </>
   );
 }

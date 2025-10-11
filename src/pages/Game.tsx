@@ -118,6 +118,11 @@ export default function Game() {
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
 
+  // --- swipe help overlay state ---
+const [helpMounted, setHelpMounted] = useState(true);  // keeps it in the DOM while fading
+const [helpVisible, setHelpVisible] = useState(true);  // drives opacity
+
+
   const total = beers.length;
   const current = beers[index];
   const progress = useMemo(() => (total === 0 ? 0 : Math.round((index / total) * 100)), [index, total]);
@@ -130,6 +135,20 @@ export default function Game() {
   const deckRef = useRef<HTMLDivElement>(null);
   const setDeckProgress = (p: number) => deckRef.current?.style.setProperty("--deck-p", p.toFixed(3));
   useEffect(() => { deckRef.current?.style.setProperty("--deck-p", "0"); }, [current?.id]);
+
+  useEffect(() => {
+    // show while index is 0 or 1; once index hits 2, fade out and unmount after animation
+    const shouldShow = index < 2;
+    if (shouldShow) {
+      setHelpMounted(true);
+      // tiny rAF to ensure the element is mounted before switching to visible
+      requestAnimationFrame(() => setHelpVisible(true));
+    } else {
+      setHelpVisible(false);
+      const t = setTimeout(() => setHelpMounted(false), 300); // keep in sync with transition below
+      return () => clearTimeout(t);
+    }
+  }, [index]);
 
   // fetch beers on mount
   useEffect(() => {
@@ -206,15 +225,20 @@ export default function Game() {
     try {
       setSaving(true);
       setSaveError(null);
-      const res = await submitResult({ name, choices: choicesRef.current }); // expects {score_ruda, score_marek}
-      setDialogOpen(false);
-      navigate(`/leaderboard?r=${res.score_ruda}&m=${res.score_marek}&u=${encodeURIComponent(name)}`);
+      const res = await submitResult({ name, choices: choicesRef.current });
+  
+      // Build URL as you already do
+      const url = `/leaderboard?r=${res.score_ruda}&m=${res.score_marek}&u=${encodeURIComponent(name)}&c=1`; // `c=1` as fallback
+  
+      // Navigate and ask the Leaderboard to celebrate
+      navigate(url, { state: { celebrate: true } });
     } catch (e: any) {
       setSaveError(String(e?.message ?? e) || "Failed to submit");
     } finally {
       setSaving(false);
     }
   }
+  
 
   // UI renderers (keep your card style: title = label, text = description)
   function renderPreview(b: Beer) {
@@ -301,10 +325,47 @@ export default function Game() {
       boxSizing: "border-box"
     }}>
       <div ref={deckRef} style={{ textAlign: "center", width: "100%", maxWidth: 420, position: "relative" }}>
+        {/* swipe help overlay (first two swipes only) */}
+          {/* swipe help overlay (first two swipes only) */}
+          {helpMounted && (
+            <div
+              style={{
+                position: "absolute",
+                zIndex: 3,                  // above preview & active card UI
+                top: -100,                    // just above the progress bar/card stack
+                left: "50%",
+                transform: "translateX(-50%)",
+                pointerEvents: "none",      // never intercept drags/taps
+                opacity: helpVisible ? 1 : 0,
+                transition: "opacity 300ms ease",
+                width: "100%",
+                maxWidth: 420,
+                textAlign: "center",
+              }}
+            >
+              <div
+                style={{
+                  lineHeight: 1,
+                  fontSize: "42px",
+                  fontWeight: 800,
+                  color: "#fff",
+                  // readable on any background, without a box:
+                  textShadow:
+                    "0 2px 4px rgba(0,0,0,0.55), 0 0 1px rgba(0,0,0,0.9)",
+                  letterSpacing: 0.2,
+                }}
+              >
+                Swipe <strong>right</strong> if you'd drink it, <strong>left</strong> to skip!
+              </div>
+            </div>
+          )}
+
+
         {/* progress */}
         <div style={{ opacity: 0.8, marginBottom: 12 }}>
           <ProgressBar value={progress} />
         </div>
+
         {beers[index + 1] && (
           <div
             style={{

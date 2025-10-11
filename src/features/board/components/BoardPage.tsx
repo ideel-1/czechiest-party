@@ -1,4 +1,4 @@
-import React from "react";
+import _React from "react";
 import "../styles/pixel.css";
 import { BoardSurface } from "./BoardSurface";
 import { AuditPanel } from "./AuditPanel";

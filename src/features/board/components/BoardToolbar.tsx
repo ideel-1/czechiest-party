@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { addPhoto, getImageNaturalSize } from "../api/items"; // getImageNaturalSize was added in items.ts
+import { addPhoto } from "../api/items"; // getImageNaturalSize was added in items.ts
 import { uploadImageFile } from "../api/uploads";
 
 export function BoardToolbar({ boardId }: { boardId: string }) {
