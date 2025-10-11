@@ -27,7 +27,9 @@ html, body {
   min-height: 100%;
   overflow-x: hidden; /* prevents accidental 1px horizontal scroll */
   background: transparent;              /* prevent page scroll */
-  overscroll-behavior: auto;   /* no image here */
+  overscroll-behavior: auto;
+  background-color: #08051f;
+  color-scheme: dark;   /* no image here */
 }
 
 .page {
@@ -64,8 +66,6 @@ body::before {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  /* tiny overdraw for Android 1px rounding issues */
-  transform: translateY(1px);
 
    /* Extend slightly, but clip instead of scroll */
    bottom: 0;
@@ -81,9 +81,10 @@ body::after {
   width: 100vw;
   height: 100lvh;
   z-index: -1;
-  background: rgba(0, 0, 0, 0.55);
+  background: #08051f;
   pointer-events: none;
-  transform: translateY(1px);
+  bottom: 0;
+  overflow: hidden;
 }
 
 html {
