@@ -255,7 +255,7 @@ const [helpVisible, setHelpVisible] = useState(true);  // drives opacity
           clipPath: "polygon(10px 0%, calc(100% - 10px) 0%, calc(100% - 10px) 5px, calc(100% - 5px) 5px, calc(100% - 5px) 10px, 100% 10px, 100% calc(100% - 10px), calc(100% - 5px) calc(100% - 10px), calc(100% - 5px) calc(100% - 5px), calc(100% - 10px) calc(100% - 5px), calc(100% - 10px) calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 10px calc(100% - 10px), 5px calc(100% - 10px), 5px calc(100% - 5px), 10px calc(100% - 5px), 10px calc(100% - 10px), 0% calc(100% - 10px), 0% 10px, 5px 10px, 5px 5px, 10px 5px, 10px 10px)",
         }}
       >
-        <img draggable={false} src={b.image_path} alt={b.label} style={{ userSelect: "none", display: "block", width: "100%", borderRadius: 8, clipPath: "polygon(8px 0%, calc(100% - 8px) 0%, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 8px), 4px calc(100% - 8px), 4px calc(100% - 4px), 8px calc(100% - 4px), 8px calc(100% - 8px), 0% calc(100% - 8px), 0% 8px, 4px 8px, 4px 4px, 8px 4px, 8px 8px)" }} />
+        <img draggable={false} src={b.image_path} alt={b.label} style={{ aspectRatio: "1 / 1", userSelect: "none", display: "block", width: "100%", borderRadius: 8, clipPath: "polygon(8px 0%, calc(100% - 8px) 0%, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 8px), 4px calc(100% - 8px), 4px calc(100% - 4px), 8px calc(100% - 4px), 8px calc(100% - 8px), 0% calc(100% - 8px), 0% 8px, 4px 8px, 4px 4px, 8px 4px, 8px 8px)" }} />
         <h2 style={{ marginTop: 24, fontSize: 36, fontWeight: 800, lineHeight: 0.8  }}>{b.label}</h2>
         {b.description ? <p style={{ marginTop: 12, fontSize: 20, lineHeight: 0.2, opacity: 0.7 }}>{b.description}</p> : null}
       </div>
@@ -281,7 +281,7 @@ const [helpVisible, setHelpVisible] = useState(true);  // drives opacity
             draggable={false}  
             src={b.image_path} 
             alt={b.label} 
-            style={{ display: "block", width: "100%", borderRadius: 8, clipPath: "polygon(8px 0%, calc(100% - 8px) 0%, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 8px), 4px calc(100% - 8px), 4px calc(100% - 4px), 8px calc(100% - 4px), 8px calc(100% - 8px), 0% calc(100% - 8px), 0% 8px, 4px 8px, 4px 4px, 8px 4px, 8px 8px)" }} 
+            style={{ aspectRatio: "1 / 1", display: "block", width: "100%", borderRadius: 8, clipPath: "polygon(8px 0%, calc(100% - 8px) 0%, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 8px), 4px calc(100% - 8px), 4px calc(100% - 4px), 8px calc(100% - 4px), 8px calc(100% - 8px), 0% calc(100% - 8px), 0% 8px, 4px 8px, 4px 4px, 8px 4px, 8px 8px)" }} 
         />
         <h2 style={{ marginTop: 24, fontSize: 36, fontWeight: 800, lineHeight: 0.8
          }}>{b.label}</h2>
@@ -294,21 +294,21 @@ const [helpVisible, setHelpVisible] = useState(true);  // drives opacity
   // loading / error / empty
   if (loading) {
     return (
-      <div style={{ height: "100vh", width: "100vw", display: "grid", placeItems: "center" }}>
+      <div style={{ height: "100svh", width: "100vw", display: "grid", placeItems: "center" }}>
         <div style={{ fontSize: 28,opacity: 0.7 }}>Loading drinks…</div>
       </div>
     );
   }
   if (error) {
     return (
-      <div style={{ height: "100vh", width: "100vw", display: "grid", placeItems: "center" }}>
+      <div style={{ height: "100svh", width: "100vw", display: "grid", placeItems: "center" }}>
         <div style={{ color: "#b91c1c" }}>{error}</div>
       </div>
     );
   }
   if (!current) {
     return (
-      <div style={{ height: "100vh", width: "100vw", display: "grid", placeItems: "center" }}>
+      <div style={{ height: "100svh", width: "100vw", display: "grid", placeItems: "center" }}>
         <div>No drinks available.</div>
       </div>
     );
@@ -316,7 +316,7 @@ const [helpVisible, setHelpVisible] = useState(true);  // drives opacity
 
   return (
     <div className="game-landing-lock"style={{ 
-      height: "100vh", 
+      height: "100svh", 
       width: "100vw", 
       display: "grid", 
       placeItems: "center", 

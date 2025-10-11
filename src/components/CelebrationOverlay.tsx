@@ -8,7 +8,7 @@ import _React, { useEffect, useRef, useState } from "react";
  */
 export default function CelebrationOverlay({
   onDone,
-  videoSrc = "/videos/covervideo.mp4",
+  videoSrc = "/images/covervideo.mp4",
   minDurationMs = 1600,   // minimum time to keep overlay before fade
   fadeMs = 280,           // fade-out duration
 }: {
