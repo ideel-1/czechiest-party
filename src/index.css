@@ -5,24 +5,11 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-    /* default image background */
-    background-image: url("/images/bg_texture.png"); /* or from public/ */
-    background-size: cover;         /* scale to fill screen */
-    background-position: center;    /* center it */
-    background-repeat: no-repeat;   /* no tiling */
-    background-attachment: fixed;   /* stay static while scrolling */
-
-     /* The darkening part ↓ */
-  background-color: rgba(0, 0, 0, 0.55); /* adjust opacity */
-  background-blend-mode: multiply;       /* blend color and image */
-  color: rgba(255, 255, 255, 0.87);
 }
 
 a {
@@ -36,16 +23,9 @@ a:hover {
 
 html, body {
   height: 100%;
-  background-image: url("/images/bg_texture.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-
-   /* The darkening part ↓ */
-   background-color: rgba(0, 0, 0, 0.55); /* adjust opacity */
-   background-blend-mode: multiply;       /* blend color and image */
-   color: rgba(255, 255, 255, 0.87);
+  margin: 0;
+  overflow-x: hidden; /* prevents accidental 1px horizontal scroll */
+  background: transparent; /* no image here */
 }
 
 body {
@@ -55,6 +35,28 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   box-sizing: border-box;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background-image: url("/images/bg_texture.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* no background-attachment needed; it's fixed by positioning */
+}
+
+/* Darkening overlay (kept separate from the image to avoid blend bugs) */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: rgba(0, 0, 0, 0.55);
+  pointer-events: none;
 }
 
 html {

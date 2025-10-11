@@ -24,20 +24,40 @@ export function randomTilt(max = 7) {
   return Math.random() < 0.5 ? -n : n;
 }
 
+/**
+ * Center-biased organic placement:
+ * - prefers middle columns using a Gaussian weight,
+ * - sometimes picks second-best to avoid strict symmetry,
+ * - adds small x/y jitter,
+ * - updates columnHeights to reserve space.
+ */
 export function organicNextPosition(
   columnHeights: number[],
   cols: number,
   itemHeight: number,
-  opts: { jitterX?: number; jitterY?: number; biasSecond?: number } = {}
+  opts: { jitterX?: number; jitterY?: number; sigma?: number; biasSecond?: number } = {}
 ) {
-  const { jitterX = 12, jitterY = 6, biasSecond = 0.28 } = opts;
-  const order = [...Array(cols).keys()].sort((a, b) => columnHeights[a] - columnHeights[b]);
+  const { jitterX = 10, jitterY = 6, sigma = Math.max(1, cols / 3), biasSecond = 0.28 } = opts;
+
+  // center Gaussian weight
+  const mid = (cols - 1) / 2;
+  const weight: number[] = Array.from({ length: cols }, (_, c) => {
+    const dx = (c - mid) / sigma;
+    return Math.exp(-0.5 * dx * dx); // 1 in center, decays to edges
+  });
+
+  // “effective height” -> lower is better
+  const eff = columnHeights.map((h, c) => h / Math.max(0.25, weight[c]));
+
+  const order = [...Array(cols).keys()].sort((a, b) => eff[a] - eff[b]);
   const pick = (Math.random() < biasSecond && cols > 1) ? order[1] : order[0];
 
   const baseX = ORIGIN_X + pick * (CARD_W + GAP);
   const x = baseX + Math.round((Math.random() * 2 - 1) * jitterX);
   const y = columnHeights[pick] + Math.round((Math.random() * 2 - 1) * jitterY);
 
-  columnHeights[pick] = y + itemHeight + GAP; // reserve space
+  // reserve space
+  columnHeights[pick] = y + itemHeight + GAP;
+
   return { x, y, col: pick };
 }

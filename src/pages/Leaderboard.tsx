@@ -234,7 +234,7 @@ function MusicBox() {
       </h3>
 
       <div style={{ gap: 8, marginTop: 10, display: "grid", alignItems: "center",
-        gridTemplateColumns: useWindowWidth() < 900 ? "1fr" : "4fr 1fr", }}>
+        gridTemplateColumns: useWindowWidth() < 900 ? "1fr" : "4fr 1fr"}}>
         <input
           value={song}
           onChange={(e) => setSong(e.target.value)}
@@ -268,10 +268,9 @@ function MusicBox() {
           {submitting ? "Submitting…" : "Submit"}
         </button>
       </div>
-
       {msg ? <div style={{ marginTop: 8, fontSize: 13, opacity: 0.8 }}>{msg}</div> : null}
 
-      {recent.length > 0 && (
+      {/*{recent.length > 0 && (
         <div style={{ marginTop: 12 }}>
           <div style={{ fontSize: 20, opacity: 0.7, marginBottom: 6, color: "black"}}>Recent requests</div>
           <ul
@@ -302,14 +301,16 @@ function MusicBox() {
             ))}
           </ul>
         </div>
-      )}
+      )} */}
 
       {disabled && (
         <div style={{ marginTop: 8, fontSize: 13, opacity: 0.7 }}>
           Music suggestions disabled: missing <code>VITE_SUPABASE_URL</code>/<code>VITE_SUPABASE_ANON_KEY</code>.
         </div>
       )}
+      
     </div>
+    
   );
 }
 
@@ -448,7 +449,7 @@ export default function Leaderboard() {
   const half = N / 2;    // small notch steps
   const BORDER = 10;     // thickness of the white border
 
-  const pixelClip = (n, h = n / 2) =>
+  const pixelClip = (n: number, h :number = n / 2) =>
     `polygon(
       ${n}px 0%, calc(100% - ${n}px) 0%,
       calc(100% - ${n}px) ${h}px, calc(100% - ${h}px) ${h}px,
@@ -473,42 +474,8 @@ export default function Leaderboard() {
           alignItems: "start",
         }}
       >
-        {/* Poster column */}
-        <div style={{ width: "100%", display: "grid", placeItems: "center" }}>
-        <div
-            style={{
-              /* OUTER: creates the white “border” with same pixel-cut */
-              display: "inline-block",
-              background: "white",
-              padding: BORDER,
-              clipPath: pixelClip(N),
-              boxShadow: "0 10px 20px rgba(0,0,0,0.15)",
-            }}
-          >
-            <div
-              /* INNER: clips the content again so the image corners follow the shape */
-              style={{
-                clipPath: pixelClip(N),
-                overflow: "hidden",
-              }}
-            >
-              <img
-                src="/images/inviteimage.png"
-                alt="Invite poster"
-                style={{
-                  display: "block",
-                  width: "min(94vw, 720px)",
-                  height: "auto",
-                }}
-              />
-            </div>
-          </div>
-          <AddToCalendarButton />
-          <MusicBox />
-        </div>
-            
         {/* Leaderboard column */}
-        <div style={{ width: "100%", display: "grid", placeItems: "center", marginTop: "15vh" }}>
+        <div style={{ width: "100%", display: "grid", placeItems: "center", marginTop: "5vh" }}>
           {u && (r > 0 || m > 0) && (
             <div
               style={{
@@ -572,6 +539,45 @@ export default function Leaderboard() {
             </div>
           )}
         </div>
+        {/* Poster column */}
+        <div style={{ width: "100%", display: "grid", placeItems: "center" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, marginTop: "5vh" }}>
+            <h2 style={{ fontFamily: "'Pixelify Sans', system-ui, sans-serif", fontSize: "3em" }}>Invite</h2>
+        </div>
+        <div
+            style={{
+              /* OUTER: creates the white “border” with same pixel-cut */
+              display: "inline-block",
+              background: "white",
+              padding: BORDER,
+              clipPath: pixelClip(N),
+              boxShadow: "0 10px 20px rgba(0,0,0,0.15)",
+            }}
+          >
+            <div
+              /* INNER: clips the content again so the image corners follow the shape */
+              style={{
+                clipPath: pixelClip(N),
+                overflow: "hidden",
+              }}
+            >
+              <img
+                src="/images/inviteimage.png"
+                alt="Invite poster"
+                style={{
+                  display: "block",
+                  width: "min(94vw, 720px)",
+                  height: "auto",
+                }}
+              />
+            </div>
+          </div>
+          <AddToCalendarButton />
+          <MusicBox />
+          <div style={{ marginBottom: "5vh" }}>
+          </div>
+        </div>
+      
       </div>
     </div>
   );

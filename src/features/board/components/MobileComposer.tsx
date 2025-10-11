@@ -56,7 +56,12 @@ export function MobileComposer({ boardId, isOpen, onClose }: Props) {
       const current = await listItems(boardId);
       const cols = computeCols();
       const heights = buildColumnHeights(current, cols);
-      const pos = organicNextPosition(heights, cols, height);
+      const pos = organicNextPosition(heights, cols, height, {
+        jitterX: 12,
+        jitterY: 6,
+        sigma: cols / 3,    // center bias spread
+        biasSecond: 0.3,    // occasional 2nd-best
+      });
       const rotate = randomTilt(7);
 
       await addPhoto(boardId, {

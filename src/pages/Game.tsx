@@ -232,8 +232,8 @@ export default function Game() {
         }}
       >
         <img draggable={false} src={b.image_path} alt={b.label} style={{ userSelect: "none", display: "block", width: "100%", borderRadius: 8, clipPath: "polygon(8px 0%, calc(100% - 8px) 0%, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 8px), 4px calc(100% - 8px), 4px calc(100% - 4px), 8px calc(100% - 4px), 8px calc(100% - 8px), 0% calc(100% - 8px), 0% 8px, 4px 8px, 4px 4px, 8px 4px, 8px 8px)" }} />
-        <h2 style={{ marginTop: 20, fontSize: 20, fontWeight: 800 }}>{b.label}</h2>
-        {b.description ? <p style={{ marginTop: 6, fontSize: 16, lineHeight: 1.5 }}>{b.description}</p> : null}
+        <h2 style={{ marginTop: 24, fontSize: 36, fontWeight: 800, lineHeight: 0.8  }}>{b.label}</h2>
+        {b.description ? <p style={{ marginTop: 12, fontSize: 20, lineHeight: 0.2, opacity: 0.7 }}>{b.description}</p> : null}
       </div>
     );
   }
@@ -259,8 +259,9 @@ export default function Game() {
             alt={b.label} 
             style={{ display: "block", width: "100%", borderRadius: 8, clipPath: "polygon(8px 0%, calc(100% - 8px) 0%, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 8px), 4px calc(100% - 8px), 4px calc(100% - 4px), 8px calc(100% - 4px), 8px calc(100% - 8px), 0% calc(100% - 8px), 0% 8px, 4px 8px, 4px 4px, 8px 4px, 8px 8px)" }} 
         />
-        <h2 style={{ marginTop: 20, fontSize: 20, fontWeight: 800 }}>{b.label}</h2>
-        {b.description ? <p style={{ marginTop: 6, fontSize: 16, lineHeight: 1.5 }}>{b.description}</p> : null}
+        <h2 style={{ marginTop: 24, fontSize: 36, fontWeight: 800, lineHeight: 0.8
+         }}>{b.label}</h2>
+        {b.description ? <p style={{ marginTop: 12, fontSize: 20, lineHeight: 0.2, opacity: 0.7 }}>{b.description}</p> : null}
 
       </div>
     );
