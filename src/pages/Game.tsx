@@ -315,7 +315,7 @@ const [helpVisible, setHelpVisible] = useState(true);  // drives opacity
   }
 
   return (
-    <div style={{ 
+    <div className="game-landing-lock"style={{ 
       height: "100vh", 
       width: "100vw", 
       display: "grid", 

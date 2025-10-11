@@ -22,10 +22,11 @@ a:hover {
 }
 
 html, body {
-  height: 100%;
   margin: 0;
+  padding: 0;
+  min-height: 100%;
   overflow-x: hidden; /* prevents accidental 1px horizontal scroll */
-  background: transparent;
+  background: none;
   overflow: auto;                 /* prevent page scroll */
   overscroll-behavior: auto;   /* no image here */
 }
@@ -58,26 +59,31 @@ body {
   box-sizing: border-box;
 }
 
-body::before {
+body::before,
+body::after {
   content: "";
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100dvh;      /* ✅ dynamic viewport height (handles iOS/Android toolbars) */
+  pointer-events: none;
+}
+
+/* Background texture */
+body::before {
   z-index: -2;
   background-image: url("/images/bg_texture.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  /* no background-attachment needed; it's fixed by positioning */
+  background-color: #000; /* fallback color for slow-loading images */
 }
 
-/* Darkening overlay (kept separate from the image to avoid blend bugs) */
+/* Dark overlay */
 body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
   z-index: -1;
   background: rgba(0, 0, 0, 0.55);
-  pointer-events: none;
 }
 
 html {
@@ -138,4 +144,11 @@ img {
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
+}
+
+@supports not (height: 100dvh) {
+  body::before,
+  body::after {
+    height: 100vh; /* fallback for older browsers */
+  }
 }
