@@ -1,8 +1,8 @@
 import React from "react";
 import "../styles/pixel.css";
 import { BoardSurface } from "./BoardSurface";
-import { BoardToolbar } from "./BoardToolbar";
 import { AuditPanel } from "./AuditPanel";
+import { AddCardFab } from "./AddCardFab";
 
 const BOARD_ID = (import.meta as any).env?.VITE_DEFAULT_BOARD_ID as string;
 
@@ -20,8 +20,9 @@ export function BoardPage() {
   return (
     <div className="w-screen h-screen grid" style={{ gridTemplateColumns: "1fr 340px" }}>
       <div className="relative">
-        <BoardToolbar boardId={BOARD_ID} />
+        {/* Remove <BoardToolbar .../> */}
         <BoardSurface boardId={BOARD_ID} />
+        <AddCardFab boardId={BOARD_ID} />
       </div>
       <AuditPanel boardId={BOARD_ID} />
     </div>

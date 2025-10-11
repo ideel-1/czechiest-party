@@ -76,7 +76,7 @@ export function PixelStairButton({
               minWidth: 240,
               padding: "16px 36px",
               color: "#0f1c3a",
-              fontFamily: "'Pixelify Sans', system-ui, sans-serif",
+              fontFamily: "'Jersey 10', system-ui, sans-serif",
               fontWeight: 800,
               letterSpacing: 1,
               fontSize: "1.5em",
@@ -115,7 +115,7 @@ export default function Landing() {
       }}
     >
       {/* Gradient layer */}
-      <div
+      {/*<div
         style={{
           position: "absolute",
           inset: 0,
@@ -124,7 +124,7 @@ export default function Landing() {
           zIndex: 0,
         }}
       />
-
+        */}
       {/* Pixel grid overlay (fixed typo 0gitpx -> 0px) */}
       <div
         style={{
@@ -150,28 +150,42 @@ export default function Landing() {
           pointerEvents: "none",
         }}
       />
-
+       {/* NEW: Bottom image layer (z=1) */}
+       <img
+        src="/images/no_bg_portrait.png"   // <-- replace with your asset
+        alt="Foreground figure"
+        style={{
+          position: "absolute",
+          left: "50%",
+          bottom: 0,
+          transform: "translateX(-50%)",
+          width: "min(100vw, 800px)",   // responsive scale
+          height: "auto",
+          zIndex: 1,
+          pointerEvents: "none",       // avoid blocking button clicks
+          userSelect: "none",
+        }}
+      />
       {/* Background image layer */}
-      <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center" }}>
+      {/* <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center" }}>
         <img
           src="/images/czech_flag.png"
           alt="Czech flag"
-          style={{ opacity: 0.5, maxWidth: "100%", height: "auto", userSelect: "none" }}
+          style={{ opacity: 0.8, maxWidth: "100%", height: "auto", userSelect: "none" }}
         />
-      </div>
+      </div> */}
 
       {/* Foreground content */}
-      <div style={{ textAlign: "center", maxWidth: 720, padding: 24, position: "relative", zIndex: 1 }}>
+      <div style={{ textAlign: "center", maxWidth: 720, padding: 24, position: "relative", zIndex: 2, transform: "translateY(-120px)" }}>
         <h1
           style={{
             fontSize: "clamp(2.5rem, 6vw, 4rem)",
             lineHeight: 1.1,
             margin: 0,
             letterSpacing: -0.5,
-            fontFamily: "'Pixelify Sans', system-ui, sans-serif",
+            fontFamily: "'Jersey 10', system-ui, sans-serif",
             fontWeight: 700,
-            color: "#000",
-            textShadow: "0 1px 0 rgba(255,255,255,0.35)",
+            color: "white",
           }}
         >
           Do you like the same stuff as we do?

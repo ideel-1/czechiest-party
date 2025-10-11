@@ -163,9 +163,9 @@ function AddToCalendarButton() {
         padding: "12px 20px",
         borderRadius: 10,
         fontSize: "1.5em",
-        background: hover ? "#0f46ba" : "#0b57d0",
+        background: hover ? "#ba0f14" : "#d00b1a",
         color: "#fff",
-        border: "4px solid #0b57d0",
+        border: "4px solid #d00b1a",
         clipPath:
               "polygon(8px 0%, calc(100% - 8px) 0%, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 8px), 4px calc(100% - 8px), 4px calc(100% - 4px), 8px calc(100% - 4px), 8px calc(100% - 8px), 0% calc(100% - 8px), 0% 8px, 4px 8px, 4px 4px, 8px 4px, 8px 8px)",
       }}
@@ -243,7 +243,7 @@ function MusicBox() {
             whiteSpace: "nowrap",
             padding: "14px 20px",
             border: "1px solid #ddd", 
-            fontFamily: "'Pixelify Sans', system-ui, sans-serif", 
+            fontFamily: "'Jersey 10', system-ui, sans-serif", 
             fontSize: 16, 
             borderRadius: 10, 
             clipPath:
@@ -318,33 +318,32 @@ function MusicBox() {
 const LeaderboardSection = ({
   title,
   rows,
-  avatarLabel,
+  avatarSrc,
   windowWidth
 }: {
   title: string;
   rows: Row[];
-  avatarLabel: string;
+  avatarSrc: string;
   windowWidth: number;
 }) => {
   return (
     <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", alignItems: "stretch" }}>
       <div style={{ display: "grid", placeItems: "center", marginBottom: 12 }}>
-        <div
-          aria-label={`${avatarLabel} avatar placeholder`}
+        <img
+          src={avatarSrc}
+          alt="Avatar"
+          loading="lazy"
+          decoding="async"
           style={{
             width: "clamp(48px, 10vw, 72px)",
             height: "clamp(48px, 10vw, 72px)",
             borderRadius: "50%",
-            background: "#e5e7eb",
             border: "2px solid #d1d5db",
-            display: "grid",
-            placeItems: "center",
-            fontWeight: 700,
-            color: "#374151",
+            objectFit: "cover",
+            background: "#e5e7eb",
+            display: "block"
           }}
-        >
-          {avatarLabel}
-        </div>
+        />
       </div>
       <h3 style={{ textAlign: "center", marginBottom: 16, fontSize: "1.4rem", fontWeight: 800 }}>{title}</h3>
       {rows.length === 0 ? (
@@ -445,6 +444,23 @@ export default function Leaderboard() {
     })();
   }, []);
 
+  const N = 12;          // notch size (outer)
+  const half = N / 2;    // small notch steps
+  const BORDER = 10;     // thickness of the white border
+
+  const pixelClip = (n, h = n / 2) =>
+    `polygon(
+      ${n}px 0%, calc(100% - ${n}px) 0%,
+      calc(100% - ${n}px) ${h}px, calc(100% - ${h}px) ${h}px,
+      calc(100% - ${h}px) ${n}px, 100% ${n}px,
+      100% calc(100% - ${n}px), calc(100% - ${h}px) calc(100% - ${n}px),
+      calc(100% - ${h}px) calc(100% - ${h}px), calc(100% - ${n}px) calc(100% - ${h}px),
+      calc(100% - ${n}px) calc(100% - ${n}px), calc(100% - ${n}px) 100%,
+      ${n}px 100%, ${n}px calc(100% - ${n}px), ${h}px calc(100% - ${n}px),
+      ${h}px calc(100% - ${h}px), ${n}px calc(100% - ${h}px), ${n}px calc(100% - ${n}px),
+      0% calc(100% - ${n}px), 0% ${n}px, ${h}px ${n}px, ${h}px ${h}px, ${n}px ${h}px, ${n}px ${n}px
+    )`;
+
   return (
     <div style={{ display: "grid", placeItems: "center"
     }}>
@@ -459,18 +475,34 @@ export default function Leaderboard() {
       >
         {/* Poster column */}
         <div style={{ width: "100%", display: "grid", placeItems: "center" }}>
-          <img
-            src="/images/invite.png"
-            alt="Invite poster"
+        <div
             style={{
-              width: "min(94vw, 720px)",
-              height: "auto",
-              borderRadius: 0,
+              /* OUTER: creates the white “border” with same pixel-cut */
+              display: "inline-block",
+              background: "white",
+              padding: BORDER,
+              clipPath: pixelClip(N),
               boxShadow: "0 10px 20px rgba(0,0,0,0.15)",
-              clipPath:
-                "polygon(12px 0%, calc(100% - 12px) 0%, calc(100% - 12px) 6px, calc(100% - 6px) 6px, calc(100% - 6px) 12px, 100% 12px, 100% calc(100% - 12px), calc(100% - 6px) calc(100% - 12px), calc(100% - 6px) calc(100% - 6px), calc(100% - 12px) calc(100% - 6px), calc(100% - 12px) calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 12px calc(100% - 12px), 6px calc(100% - 12px), 6px calc(100% - 6px), 12px calc(100% - 6px), 12px calc(100% - 12px), 0% calc(100% - 12px), 0% 12px, 6px 12px, 6px 6px, 12px 6px, 12px 12px)",
             }}
-          />
+          >
+            <div
+              /* INNER: clips the content again so the image corners follow the shape */
+              style={{
+                clipPath: pixelClip(N),
+                overflow: "hidden",
+              }}
+            >
+              <img
+                src="/images/inviteimage.png"
+                alt="Invite poster"
+                style={{
+                  display: "block",
+                  width: "min(94vw, 720px)",
+                  height: "auto",
+                }}
+              />
+            </div>
+          </div>
           <AddToCalendarButton />
           <MusicBox />
         </div>
@@ -535,8 +567,8 @@ export default function Leaderboard() {
                 minWidth: 0,
               }}
             >
-              <LeaderboardSection title={"Most similar to Ruda's"} rows={rudaRows} avatarLabel="R" windowWidth={windowWidth} />
-              <LeaderboardSection title={"Most similar to Marek's"} rows={marekRows} avatarLabel="M" windowWidth={windowWidth} />
+              <LeaderboardSection title={"Most similar to Ruda's"} rows={rudaRows} avatarSrc="/images/profilepic_ruda.png" windowWidth={windowWidth} />
+              <LeaderboardSection title={"Most similar to Marek's"} rows={marekRows} avatarSrc="/images/profilepic_marek.png" windowWidth={windowWidth} />
             </div>
           )}
         </div>
