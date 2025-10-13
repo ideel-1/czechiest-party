@@ -240,7 +240,7 @@ function MusicBox() {
         <input
           value={song}
           onChange={(e) => setSong(e.target.value)}
-          placeholder="e.g. Avril Lagigne - Sk8er Boi"
+          placeholder="e.g. Avril Lavigne - Sk8er Boi"
           style={{
             whiteSpace: "nowrap",
             padding: "14px 20px",
