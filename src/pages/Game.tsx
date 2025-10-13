@@ -6,7 +6,6 @@ import NameDialog from "../components/NameDialog";
 import ProgressBar from "../components/ui/ProgressBar";
 import { getBeers, submitResult } from "../lib/api";
 import type { Beer } from "../lib/api";
-import { warmupVideo } from "../lib/videoCache";
 import coverUrl from "../assets/covervideo.mp4?url";
 
 const CELEBRATION_VIDEO_SRC = coverUrl; // hashed, immutable

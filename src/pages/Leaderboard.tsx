@@ -130,7 +130,7 @@ async function submitSongSuggestion(song: string) {
 function AddToCalendarButton() {
   // TODO: replace with your real event info
   const title = "Czechiest Party";
-  const start = new Date("2025-11-08T21:00:00+03:00"); // Europe/Helsinki example
+  const start = new Date("2025-11-08T20:30:00+03:00"); // Europe/Helsinki example
   const end = new Date("2025-11-09T04:00:00+03:00");
   const details = "Czechiest Part 4 - we have a few drinks, but also bring your own:)";
   const location = "Otakaari 20, 02150 Espoo, Finland";
@@ -240,7 +240,7 @@ function MusicBox() {
         <input
           value={song}
           onChange={(e) => setSong(e.target.value)}
-          placeholder="e.g. Black Eyed Peas - Pump it"
+          placeholder="e.g. Avril Lagigne - Sk8er Boi"
           style={{
             whiteSpace: "nowrap",
             padding: "14px 20px",
