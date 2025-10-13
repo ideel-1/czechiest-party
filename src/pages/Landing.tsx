@@ -159,7 +159,7 @@ export default function Landing() {
           left: "50%",
           bottom: 0,
           transform: "translateX(-50%)",
-          width: "min(100vw, 800px)",   // responsive scale
+          width: "min(100vw, 600px)",   // responsive scale
           height: "auto",
           zIndex: 1,
           pointerEvents: "none",       // avoid blocking button clicks
