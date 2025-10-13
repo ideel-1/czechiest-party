@@ -634,7 +634,6 @@ const [celebrate, setCelebrate] = useState<boolean>(shouldCelebrateInitial);    
     </div>
       {celebrate && (
       <CelebrationOverlay
-        videoSrc="/images/covervideo.mp4"       // put this file in public/videos/
         minDurationMs={4600}                   // tweak as you like
         fadeMs={600}
         onDone={() => {

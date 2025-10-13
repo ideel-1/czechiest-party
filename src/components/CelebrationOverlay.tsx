@@ -1,5 +1,8 @@
 import _React, { useEffect, useRef, useState } from "react";
+import { getWarmUrl} from "../lib/videoCache";
+import coverUrl from "../assets/covervideo.mp4?url";
 
+const CELEBRATION_VIDEO_SRC = coverUrl; // hashed, immutable
 /**
  * Fullscreen celebration overlay: plays a short video, runs confetti,
  * then fades out and calls onDone().
@@ -8,7 +11,7 @@ import _React, { useEffect, useRef, useState } from "react";
  */
 export default function CelebrationOverlay({
   onDone,
-  videoSrc = "/images/covervideo.mp4",
+  videoSrc = CELEBRATION_VIDEO_SRC,
   minDurationMs = 1600,   // minimum time to keep overlay before fade
   fadeMs = 280,           // fade-out duration
 }: {
@@ -17,6 +20,7 @@ export default function CelebrationOverlay({
   minDurationMs?: number;
   fadeMs?: number;
 }) {
+  const effectiveSrc = getWarmUrl() || videoSrc;
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [fade, setFade] = useState(false);
@@ -185,20 +189,18 @@ export default function CelebrationOverlay({
       {/* the video sits behind the confetti canvas */}
       <video
         ref={videoRef}
-        src={videoSrc}
         muted
         playsInline
         autoPlay
         preload="auto"
+        crossOrigin="anonymous"
         style={{
           width: "min(94vw, 720px)",
           height: "auto",
-          borderRadius: 0,
-          boxShadow: "0 18px 48px rgba(0,0,0,0.5)",
-          clipPath:
-            "polygon(12px 0%, calc(100% - 12px) 0%, calc(100% - 12px) 6px, calc(100% - 6px) 6px, calc(100% - 6px) 12px, 100% 12px, 100% calc(100% - 12px), calc(100% - 6px) calc(100% - 12px), calc(100% - 6px) calc(100% - 6px), calc(100% - 12px) calc(100% - 6px), calc(100% - 12px) calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 12px calc(100% - 12px), 6px calc(100% - 12px), 6px calc(100% - 6px), 12px calc(100% - 6px), 12px calc(100% - 12px), 0% calc(100% - 12px), 0% 12px, 6px 12px, 6px 6px, 12px 6px, 12px 12px)",
         }}
-      />
+        >
+        <source src={effectiveSrc} type="video/mp4" />
+      </video>
 
       {/* confetti */}
       <canvas

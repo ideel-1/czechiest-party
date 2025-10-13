@@ -6,6 +6,11 @@ import NameDialog from "../components/NameDialog";
 import ProgressBar from "../components/ui/ProgressBar";
 import { getBeers, submitResult } from "../lib/api";
 import type { Beer } from "../lib/api";
+import { warmupVideo } from "../lib/videoCache";
+import coverUrl from "../assets/covervideo.mp4?url";
+
+const CELEBRATION_VIDEO_SRC = coverUrl; // hashed, immutable
+
 
 
 type Dir = "left" | "right" | "up" | "down";
@@ -97,6 +102,9 @@ export function PixelMiniArrowV2({
 }
 export default function Game() {
   const navigate = useNavigate();
+    // celebration video warmup
+  const warmupRef = useRef<HTMLVideoElement | null>(null);
+  
 
   const cardRef = useRef<SwipeCardHandle>(null);
   const [isRewinding, setIsRewinding] = useState(false);  
@@ -135,7 +143,7 @@ const [helpVisible, setHelpVisible] = useState(true);  // drives opacity
   const deckRef = useRef<HTMLDivElement>(null);
   const setDeckProgress = (p: number) => deckRef.current?.style.setProperty("--deck-p", p.toFixed(3));
   useEffect(() => { deckRef.current?.style.setProperty("--deck-p", "0"); }, [current?.id]);
-
+  
   useEffect(() => {
     // show while index is 0 or 1; once index hits 2, fade out and unmount after animation
     const shouldShow = index < 2;
@@ -194,6 +202,29 @@ const [helpVisible, setHelpVisible] = useState(true);  // drives opacity
       setIsRewinding(false);
     });
   }
+    // When close to the end, create a hidden <video> to warm the decoder/cache
+  useEffect(() => {
+      const remaining = total - index;
+      if (remaining > 0 && remaining <= 3 && !warmupRef.current) {
+        const v = document.createElement("video");
+        v.src = CELEBRATION_VIDEO_SRC;
+        v.preload = "auto";
+        v.muted = true;               // satisfies autoplay policy if needed
+        (v as any).playsInline = true;
+        Object.assign(v.style, {
+          position: "absolute",
+          width: "1px",
+          height: "1px",
+          opacity: "0",
+          pointerEvents: "none",
+          transform: "translate(-9999px, -9999px)",
+        });
+        document.body.appendChild(v);
+        try { v.load(); } catch {}
+        warmupRef.current = v;
+      }
+    }, [total, index]);
+   
 
   // answer handler (0 = skip, 1 = drink)
   function answer(choice: 0 | 1) {
@@ -238,6 +269,19 @@ const [helpVisible, setHelpVisible] = useState(true);  // drives opacity
       setSaving(false);
     }
   }
+    // Cleanup warmup element
+    useEffect(() => {
+      return () => {
+        const v = warmupRef.current;
+        if (v) {
+          try { v.pause(); } catch {}
+          v.removeAttribute("src");
+          try { v.load(); } catch {}
+          v.remove();
+          warmupRef.current = null;
+        }
+      };
+    }, []);
   
 
   // UI renderers (keep your card style: title = label, text = description)
@@ -313,6 +357,7 @@ const [helpVisible, setHelpVisible] = useState(true);  // drives opacity
       </div>
     );
   }
+  
 
   return (
     <div className="game-landing-lock"style={{ 
