@@ -115,7 +115,7 @@ export function MobileComposer({ boardId, isOpen, onClose }: Props) {
 
           {preview && (
             <div style={{ marginTop: 8 }}>
-              <img src={preview} alt="preview" style={{ display: "block", width: "100%", height: "auto", borderRadius: 8 }} />
+              <img src={preview} alt="preview" loading="lazy" decoding="async" style={{ display: "block", width: "100%", height: "auto", borderRadius: 8 }} />
               <button onClick={() => { setFile(null); setPreview(null); }} className="px-button" style={{ marginTop: 8 }}>
                 Remove Selected Image
               </button>

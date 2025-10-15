@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import Picture from "@/components/Picture";
 import { Link } from "react-router-dom";
 
 export function PixelStairButton({
@@ -151,18 +152,19 @@ export default function Landing() {
         }}
       />
        {/* NEW: Bottom image layer (z=1) */}
-       <img
-        src="/images/no_bg_portrait.png"   // <-- replace with your asset
+      <Picture
+        src="/images/no_bg_portrait.png"
         alt="Foreground figure"
+        eager
         style={{
           position: "absolute",
           left: "50%",
           bottom: 0,
           transform: "translateX(-50%)",
-          width: "min(100vw, 600px)",   // responsive scale
+          width: "min(100vw, 600px)",
           height: "auto",
           zIndex: 1,
-          pointerEvents: "none",       // avoid blocking button clicks
+          pointerEvents: "none",
           userSelect: "none",
         }}
       />
