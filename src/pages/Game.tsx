@@ -365,7 +365,6 @@ const [helpVisible, setHelpVisible] = useState(true);  // drives opacity
       display: "grid", 
       placeItems: "center", 
       padding: 24, 
-      overflow: "hidden",
       boxSizing: "border-box"
     }}>
       <div ref={deckRef} style={{ textAlign: "center", width: "100%", maxWidth: 420, position: "relative", marginTop: "calc(env(safe-area-inset-top, 0px) + 32px)",}}>
