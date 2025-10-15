@@ -163,6 +163,9 @@ img {
   }
 }
 
+.card-media { overflow: hidden; border-radius: 10px; }
+
+
 /* Safari (macOS + iOS) – unclipping globals + lock */
 @supports (-webkit-hyphens: none) and (not (hyphens: none)) {
   html, body {
@@ -171,7 +174,11 @@ img {
     overflow-y: visible !important;
     overscroll-behavior: none !important;
   }
-  .game-landing-lock { overflow: visible !important; height: 100dvh !important; }
+  .game-landing-lock .card-shell,
+  .game-landing-lock .card-shell img {
+    -webkit-clip-path: none !important;
+            clip-path: none !important;
+  }
 }
 
 .safari html, .safari body { 
