@@ -162,18 +162,27 @@ img {
     height: 100vh; /* fallback for older browsers */
   }
 }
- /* ios-compositor-fix.css */
-@supports (-webkit-touch-callout: none) {
-  /* 1) Do not clip the whole deck container on iOS */
-  .game-landing-lock {
-    overflow: visible !important;
-    height: 100dvh; /* avoids svh quirks */
-  }
 
-  /* 2) Remove polygon clip-paths inside the card stack */
-  .game-landing-lock [style*="clip-path"],
-  .game-landing-lock img {
+/* iOS Safari container unclipping */
+@media (-webkit-min-device-pixel-ratio: 2) and (hover: none) and (pointer: coarse) {
+  html, body, #root {
+    overflow: visible !important;
+    overscroll-behavior: none !important;
+  }
+}
+@media (-webkit-min-device-pixel-ratio: 2) and (hover: none) and (pointer: coarse) {
+  .game-landing-lock {
+    height: 100dvh; /* safer on iOS */
+  }
+  /* If you still use polygon clip-paths */
+  .game-landing-lock .card-shell,
+  .game-landing-lock .card-shell img {
     -webkit-clip-path: none !important;
             clip-path: none !important;
   }
+  .card-media { overflow: hidden; border-radius: 10px; }
 }
+
+
+
+
