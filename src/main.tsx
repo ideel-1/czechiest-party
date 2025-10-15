@@ -10,6 +10,13 @@ import NameSubmissionWrapper from "./pages/NameSubmissionWrapper";
 import "./index.css";
 const Board = React.lazy(() => import("./features/board"));
 
+// main.tsx – before ReactDOM.createRoot(...)
+(() => {
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  if (isSafari) document.documentElement.classList.add("safari");
+})();
+
+
 const router = createBrowserRouter([
   {
     element: <RootLayout />, // <- wraps all pages with AnimatePresence + PageTransition

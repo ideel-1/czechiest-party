@@ -163,25 +163,28 @@ img {
   }
 }
 
-/* iOS Safari container unclipping */
-@media (-webkit-min-device-pixel-ratio: 2) and (hover: none) and (pointer: coarse) {
-  html, body, #root {
+/* Safari (macOS + iOS) – unclipping globals + lock */
+@supports (-webkit-hyphens: none) and (not (hyphens: none)) {
+  html, body {
     overflow: visible !important;
+    overflow-x: visible !important;
+    overflow-y: visible !important;
     overscroll-behavior: none !important;
   }
+  .game-landing-lock { overflow: visible !important; height: 100dvh !important; }
 }
-@media (-webkit-min-device-pixel-ratio: 2) and (hover: none) and (pointer: coarse) {
-  .game-landing-lock {
-    height: 100dvh; /* safer on iOS */
-  }
-  /* If you still use polygon clip-paths */
-  .game-landing-lock .card-shell,
-  .game-landing-lock .card-shell img {
-    -webkit-clip-path: none !important;
-            clip-path: none !important;
-  }
-  .card-media { overflow: hidden; border-radius: 10px; }
+
+.safari html, .safari body { 
+  overflow: visible !important; 
+  overflow-x: visible !important; 
+  overflow-y: visible !important; 
+  overscroll-behavior: none !important; 
 }
+.safari .game-landing-lock { 
+  overflow: visible !important; 
+  height: 100dvh !important; 
+}
+
 
 
 
