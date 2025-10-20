@@ -142,6 +142,22 @@ const [helpVisible, setHelpVisible] = useState(true);  // drives opacity
   const deckRef = useRef<HTMLDivElement>(null);
   const setDeckProgress = (p: number) => deckRef.current?.style.setProperty("--deck-p", p.toFixed(3));
   useEffect(() => { deckRef.current?.style.setProperty("--deck-p", "0"); }, [current?.id]);
+
+  // dynamic viewport height variable to handle mobile keyboard / dynamic toolbars
+  useEffect(() => {
+    function setVhVar() {
+      const vv = (window as any).visualViewport;
+      const h = vv?.height ?? window.innerHeight;
+      document.documentElement.style.setProperty("--vh", `${h * 0.01}px`);
+    }
+    setVhVar();
+    window.addEventListener("resize", setVhVar);
+    (window as any).visualViewport?.addEventListener?.("resize", setVhVar);
+    return () => {
+      window.removeEventListener("resize", setVhVar);
+      (window as any).visualViewport?.removeEventListener?.("resize", setVhVar);
+    };
+  }, []);
   
   useEffect(() => {
     // show while index is 0 or 1; once index hits 2, fade out and unmount after animation
@@ -337,21 +353,21 @@ const [helpVisible, setHelpVisible] = useState(true);  // drives opacity
   // loading / error / empty
   if (loading) {
     return (
-      <div style={{ height: "100svh", width: "100vw", display: "grid", placeItems: "center" }}>
+      <div style={{ height: "calc(var(--vh, 1dvh) * 100)", width: "100vw", display: "grid", placeItems: "center" }}>
         <div style={{ fontSize: 28,opacity: 0.7 }}>Loading drinks…</div>
       </div>
     );
   }
   if (error) {
     return (
-      <div style={{ height: "100svh", width: "100vw", display: "grid", placeItems: "center" }}>
+      <div style={{ height: "calc(var(--vh, 1dvh) * 100)", width: "100vw", display: "grid", placeItems: "center" }}>
         <div style={{ color: "#b91c1c" }}>{error}</div>
       </div>
     );
   }
   if (!current) {
     return (
-      <div style={{ height: "100svh", width: "100vw", display: "grid", placeItems: "center" }}>
+      <div style={{ height: "calc(var(--vh, 1dvh) * 100)", width: "100vw", display: "grid", placeItems: "center" }}>
         <div>No drinks available.</div>
       </div>
     );
@@ -360,7 +376,7 @@ const [helpVisible, setHelpVisible] = useState(true);  // drives opacity
 
   return (
     <div className="game-landing-lock"style={{ 
-      height: "100svh", 
+      height: "calc(var(--vh, 1dvh) * 100)", 
       width: "100vw", 
       display: "grid", 
       placeItems: "center", 
@@ -421,7 +437,7 @@ const [helpVisible, setHelpVisible] = useState(true);  // drives opacity
               transform: "scale(calc(0.92 + (0.08 * var(--deck-p, 0))))",
               transformOrigin: "50% 50%",
               opacity: "calc(0.20 + (0.75 * var(--deck-p, 0)))",
-              filter: "blur(calc(0.2px * (1 - var(--deck-p, 0))))",
+              // Removed blur filter for better mobile perf
               transition: "transform 180ms ease, opacity 180ms ease, filter 180ms ease",
               willChange: "transform, opacity, filter",
               backfaceVisibility: "hidden",

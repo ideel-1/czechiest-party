@@ -156,6 +156,10 @@ const SwipeCardInner = forwardRef<SwipeCardHandle, Props>(function SwipeCardInne
         el.setPointerCapture(e.pointerId);
       } catch {}
       const x = (e as any).clientX as number;
+      // Edge guard similar to touch to avoid system back/forward gestures
+      if (x < 16 || x > window.innerWidth - 16) {
+        return;
+      }
       sample.current.dragging = true;
       sample.current.active = false;
       sample.current.startX = x;
@@ -412,13 +416,13 @@ const SwipeCardInner = forwardRef<SwipeCardHandle, Props>(function SwipeCardInne
   return (
     <div
       ref={refEl}
-      className="relative touch-pan-y will-change-transform select-none"
+      className="relative will-change-transform select-none"
       style={{
         transform: "none",
         backfaceVisibility: "hidden",
         transformStyle: "preserve-3d",
         zIndex: 1,
-        touchAction: "pan-y",            // allow vertical scrolling, we handle horizontal
+        touchAction: "none",            // prevent UA gestures conflicting with horizontal swipes
         WebkitUserSelect: "none",
         userSelect: "none",
         WebkitTouchCallout: "none",
@@ -453,7 +457,7 @@ const SwipeCardInner = forwardRef<SwipeCardHandle, Props>(function SwipeCardInne
           top: 60,
           right: 80,
           // responsive stamp size, not full width
-          width: "300px",
+          width: "clamp(160px, 36vw, 300px)",
           height: "auto",
           // animate via CSS variable
           opacity: "var(--nope, 0)",
@@ -477,7 +481,7 @@ const SwipeCardInner = forwardRef<SwipeCardHandle, Props>(function SwipeCardInne
           position: "absolute",
           top: 80,
           left: 80,
-          width: "300px",
+          width: "clamp(160px, 36vw, 300px)",
           height: "auto",
           opacity: "var(--like, 0)",
           transform:
